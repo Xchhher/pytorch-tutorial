@@ -2,10 +2,11 @@ import torch
 import torch.nn as nn
 import torchvision
 import torchvision.transforms as transforms
-import random
+from util import (seed_everything,save_model,reload_model)
 
 # Device configuration
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
 
 # Hyper-parameters 
 input_size = 784
@@ -14,14 +15,16 @@ num_classes = 10
 num_epochs = 5
 batch_size = 100
 learning_rate = 0.001
+seed = 20
 
+seed_everything(seed)
 # MNIST dataset 
-train_dataset = torchvision.datasets.MNIST(root='../../data', 
+train_dataset = torchvision.datasets.MNIST(root='tutorials/01-basics/feedforward_neural_network', 
                                            train=True, 
                                            transform=transforms.ToTensor(),  
                                            download=True)
 
-test_dataset = torchvision.datasets.MNIST(root='../../data', 
+test_dataset = torchvision.datasets.MNIST(root='tutorials/01-basics/feedforward_neural_network', 
                                           train=False, 
                                           transform=transforms.ToTensor())
 
@@ -54,9 +57,12 @@ model = NeuralNet(input_size, hidden_size, num_classes).to(device)
 criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)  
 
+#手动调整如果没训练完就停了 就resume设置为true epoch为加载的第几次
+reload_model(model,optimizer,epoch=4,RESUME=True) 
+
 # Train the model
 total_step = len(train_loader)
-for epoch in range(num_epochs):
+for epoch in range(num_epochs):  # 可以在这里引入reload_model的返回值start_epoch 作为range的开始
     for i, (images, labels) in enumerate(train_loader):  
         # Move tensors to the configured device
         images = images.reshape(-1, 28*28).to(device)
@@ -74,6 +80,7 @@ for epoch in range(num_epochs):
         if (i+1) % 100 == 0:
             print ('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}' 
                    .format(epoch+1, num_epochs, i+1, total_step, loss.item()))
+    save_model(model,optimizer,epoch) # 保存第epoch个训练的model
 
 # Test the model
 # In test phase, we don't need to compute gradients (for memory efficiency)
@@ -90,14 +97,3 @@ with torch.no_grad():
 
     print('Accuracy of the network on the 10000 test images: {} %'.format(100 * correct / total))
 
-# Save the model checkpoint
-torch.save(model.state_dict(), "./models/checkpoint/mnist_model.ckpt")
-
-checkpoint = {
-    "net":model.state_dict(),
-    "optimizer":optimizer.state_dict(),
-    "epoch":epoch
-}
-
-# 尝试断点续训
-# lalalalaaaa
