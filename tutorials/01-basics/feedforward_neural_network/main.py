@@ -94,3 +94,4 @@ with torch.no_grad():
 torch.save(model.state_dict(), 'mnist_model.ckpt')
 
 # 尝试断点续训
+# lalalala
