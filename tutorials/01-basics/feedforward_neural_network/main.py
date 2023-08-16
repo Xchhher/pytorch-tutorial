@@ -91,7 +91,13 @@ with torch.no_grad():
     print('Accuracy of the network on the 10000 test images: {} %'.format(100 * correct / total))
 
 # Save the model checkpoint
-torch.save(model.state_dict(), 'mnist_model.ckpt')
+torch.save(model.state_dict(), "./models/checkpoint/mnist_model.ckpt")
+
+checkpoint = {
+    "net":model.state_dict(),
+    "optimizer":optimizer.state_dict(),
+    "epoch":epoch
+}
 
 # 尝试断点续训
 # lalalalaaaa
