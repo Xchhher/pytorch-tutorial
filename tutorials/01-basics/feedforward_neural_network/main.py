@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torchvision
 import torchvision.transforms as transforms
-from util import (seed_everything,save_model,reload_model)
+from util import (seed_everything,save_model,reload_model) # 在同路径下存放一个util.py
 
 # Device configuration
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -17,14 +17,16 @@ batch_size = 100
 learning_rate = 0.001
 seed = 20
 
+#保证训练的可复现性
 seed_everything(seed)
+
 # MNIST dataset 
-train_dataset = torchvision.datasets.MNIST(root='tutorials/01-basics/feedforward_neural_network', 
+train_dataset = torchvision.datasets.MNIST(root='tutorials/data', 
                                            train=True, 
                                            transform=transforms.ToTensor(),  
                                            download=True)
 
-test_dataset = torchvision.datasets.MNIST(root='tutorials/01-basics/feedforward_neural_network', 
+test_dataset = torchvision.datasets.MNIST(root='tutorials/data', 
                                           train=False, 
                                           transform=transforms.ToTensor())
 

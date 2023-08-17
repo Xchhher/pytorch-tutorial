@@ -12,14 +12,14 @@ def seed_everything(seed = 20):
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
 
-# 设置dataloader的种子
+# 设置dataloader的种子 
 def worker_init_fn(worker_id,rank,seed):
     worker_seed = rank + seed
     random.seed(worker_id)
     np.random.seed(worker_seed)
     torch.manual_seed(worker_seed)
 
-# 断点续训
+# 断点续训 这里是指定了路径 移植到其他文件的时候需要对路径以及名称进行修改
 def save_model(model,optimizer,num_epochs):
         # Save the model checkpoint 训练的过程中保存模型
     checkpoint = {
