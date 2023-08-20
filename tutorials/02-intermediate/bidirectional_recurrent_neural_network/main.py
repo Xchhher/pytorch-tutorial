@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torchvision
 import torchvision.transforms as transforms
-
+from util import (seed_everything,save_model,reload_model)
 
 # Device configuration
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -13,17 +13,19 @@ input_size = 28
 hidden_size = 128
 num_layers = 2
 num_classes = 10
-batch_size = 100
+batch_size = 128
 num_epochs = 2
 learning_rate = 0.003
 
-# MNIST dataset
-train_dataset = torchvision.datasets.MNIST(root='../../data/',
+seed_everything()
+
+# 加载数据集 MNIST dataset
+train_dataset = torchvision.datasets.MNIST(root='tutorials/data',
                                            train=True, 
                                            transform=transforms.ToTensor(),
                                            download=True)
 
-test_dataset = torchvision.datasets.MNIST(root='../../data/',
+test_dataset = torchvision.datasets.MNIST(root='tutorials/data',
                                           train=False, 
                                           transform=transforms.ToTensor())
 
