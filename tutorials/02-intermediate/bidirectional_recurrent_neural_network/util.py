@@ -29,8 +29,7 @@ def save_model(model,optimizer,num_epochs):
     }
     if not os.path.isdir("tutorials/02-intermediate/bidirectional_recurrent_neural_network/models"):
         os.mkdir("tutorials/02-intermediate/bidirectional_recurrent_neural_network/models")
-    torch.save(checkpoint, 'tutorials/02-intermediate/bidirectional_recurrent_neural_network/\
-               models/ckpt_best_%s.pth' %(str(num_epochs)))
+    torch.save(checkpoint, 'tutorials/02-intermediate/bidirectional_recurrent_neural_network/models/ckpt_best_%s.pth' %(str(num_epochs)))
 
 
 # 断点继续训练 针对 学习率不变

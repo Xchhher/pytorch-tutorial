@@ -14,8 +14,8 @@ hidden_size = 128
 num_layers = 2
 num_classes = 10
 batch_size = 128
-num_epochs = 2
-learning_rate = 0.003
+num_epochs = 6
+learning_rate = 0.001
 
 seed_everything()
 
@@ -85,6 +85,7 @@ for epoch in range(num_epochs):
         if (i+1) % 100 == 0:
             print ('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}' 
                    .format(epoch+1, num_epochs, i+1, total_step, loss.item()))
+save_model(model,optimizer,num_epochs)
 
 # Test the model
 with torch.no_grad():
@@ -101,4 +102,4 @@ with torch.no_grad():
     print('Test Accuracy of the model on the 10000 test images: {} %'.format(100 * correct / total)) 
 
 # Save the model checkpoint
-torch.save(model.state_dict(), 'model.ckpt')
+# torch.save(model.state_dict(), 'model.ckpt')
