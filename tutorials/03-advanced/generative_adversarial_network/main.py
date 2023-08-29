@@ -15,7 +15,7 @@ hidden_size = 256
 image_size = 784
 num_epochs = 200
 batch_size = 100
-sample_dir = 'samples'
+sample_dir = 'tutorial/samples' # 跟之前下载的dataset 路径名为data一个地位
 
 # Create a directory if not exists
 if not os.path.exists(sample_dir):
@@ -32,7 +32,7 @@ transform = transforms.Compose([
                                      std=[0.5])])
 
 # MNIST dataset
-mnist = torchvision.datasets.MNIST(root='../../data/',
+mnist = torchvision.datasets.MNIST(root='tutorial/data/',
                                    train=True,
                                    transform=transform,
                                    download=True)
@@ -81,7 +81,8 @@ def reset_grad():
 total_step = len(data_loader)
 for epoch in range(num_epochs):
     for i, (images, _) in enumerate(data_loader):
-        images = images.reshape(batch_size, -1).to(device)
+        images = images.reshape(batch_size, -1).to(device) 
+        # 这边的(batch_size,-1) 其实是因为data的形式是(batch_size,channels,w,d) 所以图片大小就是后三者的乘积给它放在一起
         
         # Create the labels which are later used as input for the BCE loss
         real_labels = torch.ones(batch_size, 1).to(device)
@@ -93,13 +94,13 @@ for epoch in range(num_epochs):
 
         # Compute BCE_Loss using real images where BCE_Loss(x, y): - y * log(D(x)) - (1-y) * log(1 - D(x))
         # Second term of the loss is always zero since real_labels == 1
-        outputs = D(images)
+        outputs = D(images) # 真图片就是dataloader的数据集里面的
         d_loss_real = criterion(outputs, real_labels)
         real_score = outputs
         
         # Compute BCELoss using fake images
         # First term of the loss is always zero since fake_labels == 0
-        z = torch.randn(batch_size, latent_size).to(device)
+        z = torch.randn(batch_size, latent_size).to(device) # 生成随机向量z，并通过生成器（G）生成假样本（fake_images）
         fake_images = G(z)
         outputs = D(fake_images)
         d_loss_fake = criterion(outputs, fake_labels)
